@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const baseURL = 'https://1.getfly.vn';
-// const baseURL = 'https://icdt.getflycrm.com';
+// const baseURL = 'https://1.getfly.vn';
+const baseURL = 'https://icdt.getflycrm.com';
 // Use mock backend URL
 const axiosClient = axios.create({
   baseURL: baseURL,

@@ -9,6 +9,17 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
     task_description: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [level, setLevel] = useState(() => {
+    switch (task.task_weight) {
+      case 1: return 0;
+      case 8: return 1;
+      case 16: return 2;
+      case 32: return 3;
+      case 48: return 4;
+      case 80: return 5;
+      default: return null;
+    }
+  });
 
   useEffect(() => {
     if (task) {
@@ -16,6 +27,18 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
         task_name: task.task_name || '',
         task_weight: task.task_weight || '',
         task_description: task.task_description || '',
+      });
+
+      setLevel(() => {
+        switch (task.task_weight) {
+          case 1: return 0;
+          case 8: return 1;
+          case 16: return 2;
+          case 32: return 3;
+          case 48: return 4;
+          case 80: return 5;
+          default: return null;
+        }
       });
     }
   }, [task]);
@@ -30,6 +53,31 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
     setIsSubmitting(true);
     await onSave(task.id, formData);
     setIsSubmitting(false);
+  };
+
+  const handleChangeLevel = (e) => {
+    const value = e.target.value;
+    setLevel(value);
+    
+    if (value !== "") {
+      const levelToWeight = {
+        "0": 1,
+        "1": 8,
+        "2": 16,
+        "3": 32,
+        "4": 48,
+        "5": 80
+      };
+
+      // Xóa [Lx] cũ nếu có ở đầu hoặc cuối tên
+      let cleanName = formData.task_name.replace(/\[L\d\]\s*/g, '').trim();
+      
+      setFormData(prev => ({
+        ...prev,
+        task_name: `[L${value}] ${cleanName}`,
+        task_weight: levelToWeight[value] || prev.task_weight
+      }));
+    }
   };
 
   return (
@@ -76,6 +124,20 @@ const EditTaskModal = ({ task, onClose, onSave }) => {
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
                 required
               />
+            </div>
+            <div>
+              <label htmlFor="task_level" className="block text-sm font-semibold text-slate-700 mb-1">
+                Level
+              </label>
+              <select value={level} onChange={handleChangeLevel} name="task_level" id="task_level">
+                <option value="">Chọn Level</option>
+                <option value="0">Level 0</option>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+                <option value="4">Level 4</option>
+                <option value="5">Level 5</option>
+              </select>
             </div>
             
             <div>
