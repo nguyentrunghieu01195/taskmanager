@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseURL = 'https://1.getfly.vn';
-const baseURL = 'https://icdt.getflycrm.com';
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
 // Use mock backend URL
 const axiosClient = axios.create({
   baseURL: baseURL,
